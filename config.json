@@ -1,0 +1,17 @@
+{
+    "ctr": {
+        "client_id": "<client-id-here>",
+        "client_password": "<client-password-here>"
+    },
+    "webex": {
+        "access_token": "<access-token-here",
+        "room_id": "<room-id-here>"
+    },
+    "twitter": {
+        "token": "<token-here>",
+        "token_secret": "<token-secret-here>",
+        "consumer_key": "<consumer-key-here>",
+        "consumer_secret": "<consumer-secret-here",
+        "since_id": 0
+    }
+}
