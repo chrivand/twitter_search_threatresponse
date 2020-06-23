@@ -1,3 +1,5 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/chrivand/twitter_search_threatresponse)
+
 # Twitter Search to Cisco Threat Response Casebook [v1.0]
 
 This is a sample script to search the Twitter hashtag #opendir for threat/malware related observables, check for Target Sightings and automatically add observables to Cisco Casebook. This enables Security Researchers and Threat Responders in a SOC to quickly see if the observables from #opendir have been seen in their environment (by leveraging Cisco Threat Response (CTR)). The #opendir hashtag is used by many threat intelligence researchers to post their findings on new threats.
