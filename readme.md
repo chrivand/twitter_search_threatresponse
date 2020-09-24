@@ -1,10 +1,10 @@
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/chrivand/twitter_search_threatresponse)
 
-# Twitter Search to Cisco Threat Response Casebook [v1.0]
+# Twitter Search to Cisco SecureX Threat Response Casebook [v1.0]
 
-This is a sample script to search the Twitter hashtag #opendir for threat/malware related observables, check for Target Sightings and automatically add observables to Cisco Casebook. This enables Security Researchers and Threat Responders in a SOC to quickly see if the observables from #opendir have been seen in their environment (by leveraging Cisco Threat Response (CTR)). The #opendir hashtag is used by many threat intelligence researchers to post their findings on new threats.
+This is a sample script to search the Twitter hashtag #opendir for threat/malware related observables, check for Target Sightings and automatically add observables to Cisco Casebook. This enables Security Researchers and Threat Responders in a SOC to quickly see if the observables from #opendir have been seen in their environment (by leveraging SecureX Threat Response (SxTR)). The #opendir hashtag is used by many threat intelligence researchers to post their findings on new threats.
 
-* For more information on how to use CTR, please review this link: [https://visibility.amp.cisco.com/#/help/introduction](https://visibility.amp.cisco.com/#/help/introduction).
+* For more information on how to use SxTR, please review this link: [https://visibility.amp.cisco.com/#/help/introduction](https://visibility.amp.cisco.com/#/help/introduction).
 
 ## Known issues
 * No known issues. 
@@ -22,10 +22,10 @@ This is a sample script to search the Twitter hashtag #opendir for threat/malwar
    * If the script has run before, it will check if there are new tweets in #opndir (using the “since_id” element from the Twitter standard search API).
      * If there was an update -> parse all the new tweets.
      * If there was no update -> do nothing.
-3.	During the parsing of the tweets, the CTR API is used to retrieve all the observables (using the Inspect API endpoint).
-4.  It then removes observables with a clean disposition (retrieved from CTR API).
+3.	During the parsing of the tweets, the SxTR API is used to retrieve all the observables (using the Inspect API endpoint).
+4.  It then removes observables with a clean disposition (retrieved from SxTR API).
 5.  It also checks for Target Sightings. If there is a Sighting of a Target, the Webex Teams message and the Case description in Casebook will get a "HIGH PRIOIRTY" tag.
-5. The last step is to create a CTR Casebook with the retrieved observables. The username and the text of the tweet will be added into the Case. Optionally, a Webex Teams message is sent to a room to update the Threat Responder.
+5. The last step is to create a SxTR Casebook with the retrieved observables. The username and the text of the tweet will be added into the Case. Optionally, a Webex Teams message is sent to a room to update the Threat Responder.
 
 
 ## Installation
