@@ -180,13 +180,19 @@ def new_casebook(returned_observables_json,returned_sightings,user_name,tweet_te
         "timestamp": casebook_datetime   
     }
 
+    # create CTR search url
+    search_base_url = "https://visibility.amp.cisco.com/investigate?q="
+    for observable in returned_observables_json:
+        search_string_to_append = observable["type"] + "%3A" + observable["value"] + "%0A"
+        search_base_url = search_base_url + search_string_to_append
+
     # post request to create casebook
     response = ctr_client.private_intel.casebook.post(casebook_json)
     if response:
         print(f"[201] Success, case added to Casebook added from #opendir Tweet by: {user_name}\n")
         
         # if Webex Teams tokens set, then send message to Webex room
-        if config_file['webex']['access_token'] is '' or config_file['webex']['room_id'] is '':
+        if config_file['webex']['access_token'] == '' or config_file['webex']['room_id'] == '':
 
             # user feed back
             print("Webex Teams not set.\n\n")
@@ -197,11 +203,11 @@ def new_casebook(returned_observables_json,returned_sightings,user_name,tweet_te
             # post a message to the specified Webex room 
             try:
                 if returned_sightings['total_sighting_count'] == 0:
-                    webex_text = f"New case added to Casebook added from #opendir Tweet by: {user_name}"
-                    message = teams.messages.create(config_file['webex']['room_id'], text=webex_text) 
+                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n>*{tweet_text}*\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
+                    message = teams.messages.create(config_file['webex']['room_id'], markdown=webex_text) 
                 if returned_sightings['total_sighting_count'] != 0:
-                    webex_text = f"New case added to Casebook added from #opendir Tweet by: {user_name}. 🚨🚨🚨  HIGH PRIORITY, Target Sightings have been identified! AMP targets: {str(returned_sightings['total_amp_sighting_count'])}, Umbrella targets: {str(returned_sightings['total_umbrella_sighting_count'])}, Email targets: {str(returned_sightings['total_email_sighting_count'])}. 🚨🚨🚨"
-                    message = teams.messages.create(config_file['webex']['room_id'], text=webex_text)
+                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n>*{tweet_text}*\n\n**HIGH PRIORITY**, Target Sightings have been identified! AMP targets: {str(returned_sightings['total_amp_sighting_count'])}, Umbrella targets: {str(returned_sightings['total_umbrella_sighting_count'])}, Email targets: {str(returned_sightings['total_email_sighting_count'])}.\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
+                    message = teams.messages.create(config_file['webex']['room_id'], markdown=webex_text)
             # error handling, if for example the Webex API key expired
             except Exception:
                 print("Webex authentication failed... Please make sure Webex Teams API key has not expired. Please review developer.webex.com for more info.\n")
