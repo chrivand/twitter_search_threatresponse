@@ -1,6 +1,6 @@
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/chrivand/twitter_search_threatresponse)
 
-# Twitter Search to Cisco SecureX Threat Response Casebook [v1.0]
+# Twitter Search to Cisco SecureX Threat Response Casebook [v1.1]
 
 This is a sample script to search the Twitter hashtag #opendir for threat/malware related observables, check for Target Sightings and automatically add observables to Cisco Casebook. This enables Security Researchers and Threat Responders in a SOC to quickly see if the observables from #opendir have been seen in their environment (by leveraging SecureX Threat Response (SxTR)). The #opendir hashtag is used by many threat intelligence researchers to post their findings on new threats.
 
@@ -9,11 +9,12 @@ This is a sample script to search the Twitter hashtag #opendir for threat/malwar
 ## Known issues
 * No known issues. 
 
-## Release notes version 1.0
+## Release notes version 1.1
 1. The "twitter" library is being used to reach the [Twitter standard search API](https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets).
 2. The "webexteamssdk" library is beinbg used to post send alerts.
 3. The script also removes all clean observables from the case to stop false positives. Often legitimate websites are added in a tweet, but are not an observable associated directly with the malware campaign. This causes Target Sightings, without them being of much interest. Removing these from the investigation is also better for the performance of the script. 
 4. The script now also checks for Target Sightings. If there is a Sighting of a Target, the Webex Teams message and the Case description in Casebook will get a "HIGH PRIORITY" tag.
+5. The Webex Teams message contains a direct investigate link to cross launch to SecureX threat response.
 
 ## Overview
 1. The script leverages the #opendir Twitter hashtag to find tweets related to new malware campaigns.
