@@ -46,8 +46,12 @@ def return_observables(tweet_text):
     #check if request was succesful
     if response:
         return(response) 
+    elif response == []:
+        print(f"No observables found for tweet:\n\n{tweet_text}\n")
+        return False
     else:
-        print(f"Observable parsing request failed, status code: {response.status_code}\n")
+        print(f"Error occured in inspecting tweet:\n\n{tweet_text}\n")
+        return False
 
 
 
@@ -147,8 +151,8 @@ def check_for_sighting(returned_observables_json):
         return(return_sightings)
 
     else:
-        print(f"Sighting check request failed, status code: {response.status_code}\n")
-        return(response.status_code)
+        print(f"Sighting check request failed...\n")
+        return(response)
 
 
 
@@ -203,16 +207,16 @@ def new_casebook(returned_observables_json,returned_sightings,user_name,tweet_te
             # post a message to the specified Webex room 
             try:
                 if returned_sightings['total_sighting_count'] == 0:
-                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n>*{tweet_text}*\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
+                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n---\n>{tweet_text}\n\n---\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
                     message = teams.messages.create(config_file['webex']['room_id'], markdown=webex_text) 
                 if returned_sightings['total_sighting_count'] != 0:
-                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n>*{tweet_text}*\n\n**HIGH PRIORITY**, Target Sightings have been identified! AMP targets: {str(returned_sightings['total_amp_sighting_count'])}, Umbrella targets: {str(returned_sightings['total_umbrella_sighting_count'])}, Email targets: {str(returned_sightings['total_email_sighting_count'])}.\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
+                    webex_text = f"🚨🚨🚨 - **New case added to SecureX Casebook added from 🐦 *#OPENDIR*!** - 🚨🚨🚨\n\nTweet by {user_name}:\n\n---\n>{tweet_text}\n\n---\n\n**HIGH PRIORITY**, Target Sightings have been identified! AMP targets: {str(returned_sightings['total_amp_sighting_count'])}, Umbrella targets: {str(returned_sightings['total_umbrella_sighting_count'])}, Email targets: {str(returned_sightings['total_email_sighting_count'])}.\n\n**Investigate directly with SecureX threat response:** {search_base_url}"
                     message = teams.messages.create(config_file['webex']['room_id'], markdown=webex_text)
             # error handling, if for example the Webex API key expired
             except Exception:
                 print("Webex authentication failed... Please make sure Webex Teams API key has not expired. Please review developer.webex.com for more info.\n")
     else:
-        print(f"Something went wrong while posting the casebook to CTR, status code: {response.status_code}\n")
+        print(f"Something went wrong while posting the casebook to CTR...\n")
 
     return response
 
@@ -247,19 +251,23 @@ def twitter_search():
             # retrieve observables from text
             returned_observables_json = return_observables(tweet_text)
 
-            # return non clean (malicious, unkown etc.) observables only
-            non_clean_observables_json = return_non_clean_observables(returned_observables_json) 
-
-            # if observables were returned (list not empty), create a casebook
-            if non_clean_observables_json != "[]":      
-                
-                # retrieve target sightings for observables
-                returned_sightings = check_for_sighting(non_clean_observables_json)
-
-                # create new case in casebook
-                new_casebook(non_clean_observables_json,returned_sightings,user_name,tweet_text)
+            # double check if observables were found in tweet
+            if returned_observables_json == False:
+                print("No observables found, skipping tweet...\n")
             else:
-                print(f"No new case created in casebook (no observables found) from: {entry_title}\n")
+                # return non clean (malicious, unkown etc.) observables only
+                non_clean_observables_json = return_non_clean_observables(returned_observables_json) 
+
+                # if observables were returned (list not empty), create a casebook
+                if non_clean_observables_json != "[]":      
+                    
+                    # retrieve target sightings for observables
+                    returned_sightings = check_for_sighting(non_clean_observables_json)
+
+                    # create new case in casebook
+                    new_casebook(non_clean_observables_json,returned_sightings,user_name,tweet_text)
+                else:
+                    print(f"No new case created in casebook (no observables found) from: {entry_title}\n")
 
     else:
         # no changes since last since_id
