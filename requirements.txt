@@ -8,5 +8,5 @@ requests-toolbelt==0.9.1
 six==1.15.0
 threatresponse==0.8.0
 twitter==1.18.0
-urllib3==1.25.9
+urllib3==1.26.5
 webexteamssdk==1.3
